@@ -24,6 +24,11 @@ int main(int argc, char **argv)
     // test_decode(&test_decode_data2[0], sizeof(test_decode_data2));
     // test_decode(&test_decode_data3[0], sizeof(test_decode_data3));
     // test_decode(&test_decode_data4[0], sizeof(test_decode_data4));
+    if (argc < 2)
+    {
+        printf("Usage: bdf_gpb <message> [parameters]\n");
+        return 0;
+    }
 
     if ((strcmp(argv[1], "Proto_AseFep_Event_Type_BOOTED") == 0))
     {

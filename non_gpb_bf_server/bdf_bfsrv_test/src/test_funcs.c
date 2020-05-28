@@ -170,15 +170,14 @@ void check_header(int size)
 
 void bf_ver_info_cmd_test(char* portname)
 {
-    printf("starting bf_ver_info_cmd_test....\n");
+//    printf("starting bf_ver_info_cmd_test....\n");
     uint8 data = 0;
     int dsize = createMessage(ver_info_cmd, seq, &data, 0);
-    printf("*****\n");
-    dispbuff0(dsize);
+//    dispbuff0(dsize);
     int read_bytes = write_read_uart(portname, &goutbuffer[0], dsize, &ginbuffer[0], 32);
-    printf("Read %d bytes in response.\n", read_bytes);
+//    printf("Read %d bytes in response.\n", read_bytes);
     check_header(read_bytes);
-    dispbuff(read_bytes);
+//    dispbuff(read_bytes);
     if (ver_info_cmd != ginbuffer[CMD_IDX])
     {
         printf("Incorrect message command - error\n!");
@@ -188,4 +187,238 @@ void bf_ver_info_cmd_test(char* portname)
                                         ginbuffer[DATA_START_IDX+2], ginbuffer[DATA_START_IDX+3]);
     memset((void*)&ginbuffer[0], 0, 32);
     seq++;
+}
+
+void bf_get_volume_cmd_test(char* portname)
+{
+    uint8 data = 0;
+    int dsize = createMessage(get_volume_cmd, seq, &data, 0);
+    int read_bytes = write_read_uart(portname, &goutbuffer[0], dsize, &ginbuffer[0], 32);
+    check_header(read_bytes);
+    if (get_volume_cmd != ginbuffer[CMD_IDX])
+    {
+        printf("Incorrect message command - error\n!");
+        return;
+    }
+    printf("Message test - OK.\nVolume :%d;\n", ginbuffer[DATA_START_IDX]);
+    memset((void*)&ginbuffer[0], 0, 32);
+    seq++;
+}
+
+void bf_set_volume_nofade_cmd_test(char* portname, uint8 target_volume)
+{
+    int dsize = createMessage(set_volume_nofade_cmd, seq, &target_volume, 1);
+    int read_bytes = write_read_uart(portname, &goutbuffer[0], dsize, &ginbuffer[0], 32);
+    check_header(read_bytes);
+    if (set_volume_nofade_cmd != ginbuffer[CMD_IDX])
+    {
+        printf("Incorrect message command - error\n!");
+        return;
+    }
+    printf("Message test - OK.\n");
+    memset((void*)&ginbuffer[0], 0, 32);
+    seq++;
+}
+
+void bf_set_volume_fade_cmd_test(char* portname, uint8 target_volume, uint16 duration)
+{
+    uint8 data[3];
+    data[0] = target_volume;
+    data[1] = (duration & 0xFF);
+    data[2] = (duration >> 8);
+    int dsize = createMessage(set_volume_fade_cmd, seq, &data[0], 3);
+    int read_bytes = write_read_uart(portname, &goutbuffer[0], dsize, &ginbuffer[0], 32);
+    check_header(read_bytes);
+    if (set_volume_fade_cmd != ginbuffer[CMD_IDX])
+    {
+        printf("Incorrect message command - error\n!");
+        return;
+    }
+    printf("Message test - OK.\n");
+    memset((void*)&ginbuffer[0], 0, 32);
+    seq++;
+}
+
+void bf_get_mute_cmd_test(char* portname)
+{
+    uint8 data = 0;
+    int dsize = createMessage(get_mute_cmd, seq, &data, 0);
+    int read_bytes = write_read_uart(portname, &goutbuffer[0], dsize, &ginbuffer[0], 32);
+    check_header(read_bytes);
+    if (get_mute_cmd != ginbuffer[CMD_IDX])
+    {
+        printf("Incorrect message command - error\n!");
+        return;
+    }
+    printf("Message test - OK.\nMute :%d;\n", ginbuffer[DATA_START_IDX]);
+    memset((void*)&ginbuffer[0], 0, 32);
+    seq++;
+}
+
+void bf_set_mute_cmd_test(char* portname, uint8 mute)
+{
+    int dsize = createMessage(set_mute_cmd, seq, &mute, 1);
+    int read_bytes = write_read_uart(portname, &goutbuffer[0], dsize, &ginbuffer[0], 32);
+    check_header(read_bytes);
+    if (set_mute_cmd != ginbuffer[CMD_IDX])
+    {
+        printf("Incorrect message command - error\n!");
+        return;
+    }
+    printf("Message test - OK.\n");
+    memset((void*)&ginbuffer[0], 0, 32);
+    seq++;
+}
+void bf_get_audio_mode_cmd_test(char* portname)
+{
+    uint8 data = 0;
+    int dsize = createMessage(get_audio_mode_cmd, seq, &data, 0);
+    int read_bytes = write_read_uart(portname, &goutbuffer[0], dsize, &ginbuffer[0], 32);
+    check_header(read_bytes);
+    if (get_audio_mode_cmd != ginbuffer[CMD_IDX])
+    {
+        printf("Incorrect message command - error\n!");
+        return;
+    }
+    if (ginbuffer[DATA_START_IDX] == 1)
+    {
+        printf("Message test - OK.\nAudio mode : entertainment mode;\n");
+    } else
+    {
+        printf("Message test - OK.\nAudio mode : massage mode;\n");
+    }
+    memset((void*)&ginbuffer[0], 0, 32);
+    seq++;
+}
+void bf_set_audio_mode_cmd_test(char* portname, uint8 audio_mode)
+{
+    int dsize = createMessage(set_audio_mode_cmd, seq, &audio_mode, 1);
+    int read_bytes = write_read_uart(portname, &goutbuffer[0], dsize, &ginbuffer[0], 32);
+    check_header(read_bytes);
+    if (set_audio_mode_cmd != ginbuffer[CMD_IDX])
+    {
+        printf("Incorrect message command - error\n!");
+        return;
+    }
+    printf("Message test - OK.\n");
+    memset((void*)&ginbuffer[0], 0, 32);
+    seq++;
+}
+void bf_get_audio_source_cmd_test(char* portname)
+{
+    uint8 data = 0;
+    int dsize = createMessage(get_audio_source_cmd, seq, &data, 0);
+    int read_bytes = write_read_uart(portname, &goutbuffer[0], dsize, &ginbuffer[0], 32);
+    check_header(read_bytes);
+    if (get_audio_source_cmd != ginbuffer[CMD_IDX])
+    {
+        printf("Incorrect message command - error\n!");
+        return;
+    }
+    printf("Message test - OK.\nSource : ");
+    switch(ginbuffer[DATA_START_IDX])
+    {
+        case 0:
+            printf("wifi-bt;\n");
+            break;
+        case 1:
+            printf("sdcard;\n");
+            break;
+        case 2:
+            printf("spdif;\n");
+            break;
+        case 3:
+            printf("aux;\n");
+            break;
+        default:
+            printf("unknown;\n");
+            break;
+    }
+    memset((void*)&ginbuffer[0], 0, 32);
+    seq++;
+}
+void bf_set_audio_source_cmd_test(char* portname, uint8 source)
+{
+    int dsize = createMessage(set_audio_source_cmd, seq, &source, 1);
+    int read_bytes = write_read_uart(portname, &goutbuffer[0], dsize, &ginbuffer[0], 32);
+    check_header(read_bytes);
+    if (set_audio_source_cmd != ginbuffer[CMD_IDX])
+    {
+        printf("Incorrect message command - error\n!");
+        return;
+    }
+    printf("Message test - OK.\n");
+    memset((void*)&ginbuffer[0], 0, 32);
+    seq++;
+}
+void bf_get_dsp_parameters_cmd_test(char* portname)
+{
+    uint8 data = 0;
+    int dsize = createMessage(get_dsp_parameters_cmd, seq, &data, 0);
+    int read_bytes = write_read_uart(portname, &goutbuffer[0], dsize, &ginbuffer[0], 32);
+    check_header(read_bytes);
+    if (get_dsp_parameters_cmd != ginbuffer[CMD_IDX])
+    {
+        printf("Incorrect message command - error\n!");
+        return;
+    }
+    printf("Message test - OK.\nLoudness :%d; Treble :%d; Bass :%d\n", ginbuffer[DATA_START_IDX], ginbuffer[DATA_START_IDX+1], ginbuffer[DATA_START_IDX+2]);
+    memset((void*)&ginbuffer[0], 0, 32);
+    seq++;
+}
+void bf_set_dsp_parameters_cmd_test(char* portname, uint8 loudness, uint8 treble, uint8 bass)
+{
+    uint8 data[3];
+    data[0] = loudness;
+    data[1] = treble;
+    data[2] = bass;
+    int dsize = createMessage(set_dsp_parameters_cmd, seq, &data[0], 3);
+    int read_bytes = write_read_uart(portname, &goutbuffer[0], dsize, &ginbuffer[0], 32);
+    check_header(read_bytes);
+    if (set_dsp_parameters_cmd != ginbuffer[CMD_IDX])
+    {
+        printf("Incorrect message command - error\n!");
+        return;
+    }
+    printf("Message test - OK.\n");
+    memset((void*)&ginbuffer[0], 0, 32);
+    seq++;
+}
+void bf_get_audio_signal_level_cmd_test(char* portname)
+{
+    uint8 data = 0;
+    int dsize = createMessage(get_audio_signal_level_cmd, seq, &data, 0);
+    int read_bytes = write_read_uart(portname, &goutbuffer[0], dsize, &ginbuffer[0], 32);
+    check_header(read_bytes);
+    if (get_audio_signal_level_cmd != ginbuffer[CMD_IDX])
+    {
+        printf("Incorrect message command - error\n!");
+        return;
+    }
+    printf("Message test - OK.\nWiFi-BT :-%d; SDcard :-%d; SPDIF :-%d; Aux :-%d\n", ginbuffer[DATA_START_IDX], ginbuffer[DATA_START_IDX+1],
+                                                                                ginbuffer[DATA_START_IDX+2], ginbuffer[DATA_START_IDX+3]);
+    memset((void*)&ginbuffer[0], 0, 32);
+    seq++;
+}
+void bf_get_ntc_values_cmd_test(char* portname)
+{
+    {
+        uint8 data = 0;
+        int dsize = createMessage(get_ntc_values_cmd, seq, &data, 0);
+        int read_bytes = write_read_uart(portname, &goutbuffer[0], dsize, &ginbuffer[0], 32);
+        check_header(read_bytes);
+        if (get_ntc_values_cmd != ginbuffer[CMD_IDX])
+        {
+            printf("Incorrect message command - error\n!");
+            return;
+        }
+        printf("Message test - OK.\nAmp1 :%dC; Amp2 :%dC; WfLeft :%dC; WfRight :%dC\n", ginbuffer[DATA_START_IDX], ginbuffer[DATA_START_IDX+1],
+                                                                                    ginbuffer[DATA_START_IDX+2], ginbuffer[DATA_START_IDX+3]);
+        memset((void*)&ginbuffer[0], 0, 32);
+        seq++;
+    }
+}
+void bf_set_dsp_tone_touch_ceff_cmd_test(char* portname, uint8 gx_int, uint16 gx_frac, uint8 gy_int, uint16 gy_frac, uint8 gz_int, uint16 gz_frac)
+{
+
 }

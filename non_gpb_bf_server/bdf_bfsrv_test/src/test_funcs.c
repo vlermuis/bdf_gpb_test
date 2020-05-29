@@ -188,7 +188,35 @@ void bf_ver_info_cmd_test(char* portname)
     memset((void*)&ginbuffer[0], 0, 32);
     seq++;
 }
-
+void bf_get_power_cmd_test(char* portname)
+{
+    uint8 data = 0;
+    int dsize = createMessage(get_power_cmd, seq, &data, 0);
+    int read_bytes = write_read_uart(portname, &goutbuffer[0], dsize, &ginbuffer[0], 32);
+    check_header(read_bytes);
+    if (get_power_cmd != ginbuffer[CMD_IDX])
+    {
+        printf("Incorrect message command - error\n!");
+        return;
+    }
+    printf("Message test - OK.\nPower mode :%d;\n", ginbuffer[DATA_START_IDX]);
+    memset((void*)&ginbuffer[0], 0, 32);
+    seq++;
+}
+void bf_set_power_cmd_test(char* portname, uint8 power_mode)
+{
+    int dsize = createMessage(set_power_cmd, seq, &power_mode, 1);
+    int read_bytes = write_read_uart(portname, &goutbuffer[0], dsize, &ginbuffer[0], 32);
+    check_header(read_bytes);
+    if (set_power_cmd != ginbuffer[CMD_IDX])
+    {
+        printf("Incorrect message command - error\n!");
+        return;
+    }
+    printf("Message test - OK. return_type:[%d]\n", ginbuffer[DATA_START_IDX]);
+    memset((void*)&ginbuffer[0], 0, 32);
+    seq++;
+}
 void bf_get_volume_cmd_test(char* portname)
 {
     uint8 data = 0;
@@ -215,7 +243,7 @@ void bf_set_volume_nofade_cmd_test(char* portname, uint8 target_volume)
         printf("Incorrect message command - error\n!");
         return;
     }
-    printf("Message test - OK.\n");
+    printf("Message test - OK. return_type:[%d]\n", ginbuffer[DATA_START_IDX]);
     memset((void*)&ginbuffer[0], 0, 32);
     seq++;
 }
@@ -234,7 +262,7 @@ void bf_set_volume_fade_cmd_test(char* portname, uint8 target_volume, uint16 dur
         printf("Incorrect message command - error\n!");
         return;
     }
-    printf("Message test - OK.\n");
+    printf("Message test - OK. return_type:[%d]\n", ginbuffer[DATA_START_IDX]);
     memset((void*)&ginbuffer[0], 0, 32);
     seq++;
 }
@@ -265,7 +293,7 @@ void bf_set_mute_cmd_test(char* portname, uint8 mute)
         printf("Incorrect message command - error\n!");
         return;
     }
-    printf("Message test - OK.\n");
+    printf("Message test - OK. return_type:[%d]\n", ginbuffer[DATA_START_IDX]);
     memset((void*)&ginbuffer[0], 0, 32);
     seq++;
 }
@@ -300,7 +328,7 @@ void bf_set_audio_mode_cmd_test(char* portname, uint8 audio_mode)
         printf("Incorrect message command - error\n!");
         return;
     }
-    printf("Message test - OK.\n");
+    printf("Message test - OK. return_type:[%d]\n", ginbuffer[DATA_START_IDX]);
     memset((void*)&ginbuffer[0], 0, 32);
     seq++;
 }
@@ -347,7 +375,7 @@ void bf_set_audio_source_cmd_test(char* portname, uint8 source)
         printf("Incorrect message command - error\n!");
         return;
     }
-    printf("Message test - OK.\n");
+    printf("Message test - OK. return_type:[%d]\n", ginbuffer[DATA_START_IDX]);
     memset((void*)&ginbuffer[0], 0, 32);
     seq++;
 }
@@ -380,7 +408,7 @@ void bf_set_dsp_parameters_cmd_test(char* portname, uint8 loudness, uint8 treble
         printf("Incorrect message command - error\n!");
         return;
     }
-    printf("Message test - OK.\n");
+    printf("Message test - OK. return_type:[%d]\n", ginbuffer[DATA_START_IDX]);
     memset((void*)&ginbuffer[0], 0, 32);
     seq++;
 }
@@ -418,7 +446,46 @@ void bf_get_ntc_values_cmd_test(char* portname)
         seq++;
     }
 }
-void bf_set_dsp_tone_touch_ceff_cmd_test(char* portname, uint8 gx_int, uint16 gx_frac, uint8 gy_int, uint16 gy_frac, uint8 gz_int, uint16 gz_frac)
+void bf_set_dsp_tone_touch_ceff_cmd_test(char* portname, uint8 gx_sign, uint8 gx_int, uint16 gx_frac,
+                                                 uint8 gy_sign, uint8 gy_int, uint16 gy_frac,
+                                                 uint8 gz_sign, uint8 gz_int, uint16 gz_frac)
 {
+    uint8 data[9];
+    data[0] = gx_int;
+    if (gx_sign)
+    {
+        data[0] = (data[0] | 0x80);
+    }
+    data[1] = (gx_frac & 0xFF);
+    data[2] = (gx_frac >> 8);
+
+    data[3] = gy_int;
+    if (gy_sign)
+    {
+        data[3] = (data[3] | 0x80);
+    }
+    data[4] = (gy_frac & 0xFF);
+    data[5] = (gy_frac >> 8);
+
+    data[6] = gz_int;
+    if (gz_sign)
+    {
+        data[6] = (data[6] | 0x80);
+    }
+    data[7] = (gz_frac & 0xFF);
+    data[8] = (gz_frac >> 8);
+
+
+    int dsize = createMessage(set_dsp_tone_touch_ceff_cmd, seq, &data[0], 9);
+    int read_bytes = write_read_uart(portname, &goutbuffer[0], dsize, &ginbuffer[0], 32);
+    check_header(read_bytes);
+    if (set_dsp_tone_touch_ceff_cmd != ginbuffer[CMD_IDX])
+    {
+        printf("Incorrect message command - error\n!");
+        return;
+    }
+    printf("Message test - OK. return_type:[%d]\n", ginbuffer[DATA_START_IDX]);
+    memset((void*)&ginbuffer[0], 0, 32);
+    seq++;
 
 }

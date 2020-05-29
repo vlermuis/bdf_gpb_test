@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "string.h"
+#include <string.h>
 #include <math.h>
+
 
 #include "uart.h"
 #include "test_funcs.h"
@@ -27,9 +28,43 @@
  * /dev/ttyUSB0 set_dsp_tone_touch_ceff_cmd -0.345 0.67 0.98
  *
  */
+
+uint8 getPartsFromCharDouble(char* param, int8* pg_int, uint16* pg_frac)
+{
+    double gx = atof(param);
+    uint8 slen;
+    char tnum[12];
+    char tnum2[2];
+    uint16 gx_frac;
+    uint8 gx_int;
+    slen = strlen(param);
+    if (gx < 0)
+    {
+        memcpy((void*)&tnum[0], (void*)&param[3], slen - 3);
+        memcpy((void*)&tnum2[0], (void*)&param[1], 1);
+    } else
+    {
+        memcpy((void*)&tnum[0], (void*)&param[2], slen - 2);
+        memcpy((void*)&tnum2[0], (void*)&param[0], 1);
+    }
+    gx_frac = atoi(tnum);
+    gx_int = atoi(tnum2);
+    *pg_int = gx_int;
+    *pg_frac = gx_frac;
+    if (gx < 0)
+    {
+        return 1;
+    } else
+    {
+        return 0;
+    }
+
+
+}
+
 int main(int argc, char **argv)
 {
-    printf("BDF BFsrv test ver: 0.0.8\n");
+    printf("BDF BFsrv test ver: 0.0.9\n");
     if (argc < 3)
     {
         printf("Incorrect input!\nbdf_bfsrv_test <uart port> <command> [parameters]\n");
@@ -40,6 +75,18 @@ int main(int argc, char **argv)
         bf_ver_info_cmd_test(argv[1]);
         return 0;
     }
+    if ((strcmp(argv[2], "get_power_cmd") == 0))
+    {
+        bf_get_power_cmd_test(argv[1]);
+        return 0;
+    }
+    if ((strcmp(argv[2], "set_power_cmd") == 0))
+    {
+        uint8 power_mode = atoi(argv[3]);
+        bf_set_power_cmd_test(argv[1], power_mode);
+        return 0;
+    }
+
     if ((strcmp(argv[2], "get_volume_cmd") == 0))
     {
         bf_get_volume_cmd_test(argv[1]);
@@ -116,10 +163,19 @@ int main(int argc, char **argv)
     }
     if ((strcmp(argv[2], "set_dsp_tone_touch_ceff_cmd") == 0))
     {
-        double gx = atof(argv[3]);
-        double gy = atof(argv[4]);
-        double gz = atof(argv[5]);
-        //bf_set_dsp_tone_touch_ceff_cmd_test(argv[1], gx, gy, gz);
+        uint8 gx_int;
+        uint16 gx_frac;
+        uint8 gx_sign = getPartsFromCharDouble(argv[3], &gx_int, &gx_frac);
+    //    printf("%d : %d\n", gx_int, gx_frac);
+        uint8 gy_int;
+        uint16 gy_frac;
+        uint8 gy_sign = getPartsFromCharDouble(argv[4], &gy_int, &gy_frac);
+    //    printf("%d : %d\n", gy_int, gy_frac);
+        uint8 gz_int;
+        uint16 gz_frac;
+        uint8 gz_sign = getPartsFromCharDouble(argv[5], &gz_int, &gz_frac);
+    //    printf("%d : %d\n", gz_int, gz_frac);
+        bf_set_dsp_tone_touch_ceff_cmd_test(argv[1], gx_sign, gx_int, gx_frac, gy_sign, gy_int, gy_frac, gz_sign, gz_int, gz_frac);
         return 0;
     }
 

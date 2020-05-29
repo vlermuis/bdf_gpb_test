@@ -12,6 +12,8 @@
  * Test command parameters following bdf_bfsrv_test :
  *
  * /dev/ttyUSB0 ver_info_cmd
+ * /dev/ttyUSB0 get_power_cmd
+ * /dev/ttyUSB0 set_power_cmd       // 0- standby; 1 - active; 2 - shutdown
  * /dev/ttyUSB0 get_volume_cmd
  * /dev/ttyUSB0 set_volume_nofade_cmd 20   // set volume to 20
  * /dev/ttyUSB0 set_volume_fade_cmd 20 300 // set volume to 20 within 300ms
@@ -178,6 +180,7 @@ int main(int argc, char **argv)
         bf_set_dsp_tone_touch_ceff_cmd_test(argv[1], gx_sign, gx_int, gx_frac, gy_sign, gy_int, gy_frac, gz_sign, gz_int, gz_frac);
         return 0;
     }
+
 
   return 0;
 }

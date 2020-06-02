@@ -38,6 +38,7 @@ namespace bfsrv_test
         static int toSendCount = 0;
         static int toRecvCount = 0;
         static byte seq = 0;
+        static eBFcmds cmd;
 
         static UInt16[] crc16tab = new UInt16[]
 {
@@ -115,6 +116,7 @@ namespace bfsrv_test
             {
                 case "ver_info_cmd":
                 {
+                    cmd = eBFcmds.ver_info_cmd;
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.ver_info_cmd, seq, dat, dat_size);
                     toRecvCount = 12;
@@ -123,6 +125,7 @@ namespace bfsrv_test
                 }
                 case "get_power_cmd":
                 {
+                    cmd = eBFcmds.get_power_cmd;
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_power_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
@@ -131,6 +134,7 @@ namespace bfsrv_test
                 }
                 case "set_power_cmd":
                 {
+                    cmd = eBFcmds.set_power_cmd;
                     byte[] dat = new byte[1];
                     dat_size = 1;
                     dat[0] = (byte)Convert.ToByte(args[2], 16);
@@ -141,6 +145,7 @@ namespace bfsrv_test
                 }
                 case "get_volume_cmd":
                 {
+                    cmd = eBFcmds.get_volume_cmd;
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_volume_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
@@ -149,6 +154,7 @@ namespace bfsrv_test
                 }
                 case "set_volume_nofade_cmd":
                 {
+                    cmd = eBFcmds.set_volume_nofade_cmd;
                     byte[] dat = new byte[1];
                     dat_size = 1;
                     dat[0] = (byte)Convert.ToByte(args[2], 16);
@@ -159,6 +165,7 @@ namespace bfsrv_test
                 }
                 case "set_volume_fade_cmd":
                 {
+                    cmd = eBFcmds.set_volume_fade_cmd;
                     byte[] dat = new byte[3];
                     dat_size = 3;
                     dat[0] = (byte)Convert.ToByte(args[2], 16);     // target volume
@@ -172,6 +179,7 @@ namespace bfsrv_test
                 }
                 case "get_mute_cmd":
                 {
+                    cmd = eBFcmds.get_mute_cmd;
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_mute_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
@@ -180,6 +188,7 @@ namespace bfsrv_test
                 }
                 case "set_mute_cmd":
                 {
+                    cmd = eBFcmds.set_mute_cmd;
                     byte[] dat = new byte[1];
                     dat_size = 1;
                     dat[0] = (byte)Convert.ToByte(args[2], 16);
@@ -190,6 +199,7 @@ namespace bfsrv_test
                 }
                 case "get_audio_mode_cmd":
                 {
+                    cmd = eBFcmds.get_audio_mode_cmd;
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_audio_mode_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
@@ -198,6 +208,7 @@ namespace bfsrv_test
                 }
                 case "set_audio_mode_cmd":
                 {
+                    cmd = eBFcmds.set_audio_mode_cmd;
                     byte[] dat = new byte[1];
                     dat_size = 1;
                     dat[0] = (byte)Convert.ToByte(args[2], 16);
@@ -208,6 +219,7 @@ namespace bfsrv_test
                 }
                 case "get_audio_source_cmd":
                 {
+                    cmd = eBFcmds.get_audio_source_cmd;
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_audio_source_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
@@ -216,6 +228,7 @@ namespace bfsrv_test
                 }
                 case "set_audio_source_cmd":
                 {
+                    cmd = eBFcmds.set_audio_source_cmd;
                     byte[] dat = new byte[1];
                     dat_size = 1;
                     dat[0] = (byte)Convert.ToByte(args[2], 16);
@@ -226,6 +239,7 @@ namespace bfsrv_test
                 }
                 case "get_dsp_parameters_cmd":
                 {
+                    cmd = eBFcmds.get_dsp_parameters_cmd;
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_dsp_parameters_cmd, seq, dat, dat_size);
                     toRecvCount = 10;
@@ -234,6 +248,7 @@ namespace bfsrv_test
                 }
                 case "set_dsp_parameters_cmd":
                 {
+                    cmd = eBFcmds.set_dsp_parameters_cmd;
                     byte[] dat = new byte[3];
                     dat_size = 3;
                     dat[0] = (byte)Convert.ToByte(args[2], 16);
@@ -246,6 +261,7 @@ namespace bfsrv_test
                 }
                 case "get_audio_signal_level_cmd":
                 {
+                    cmd = eBFcmds.get_audio_signal_level_cmd;
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_audio_signal_level_cmd, seq, dat, dat_size);
                     toRecvCount = 11;
@@ -254,6 +270,7 @@ namespace bfsrv_test
                 } 
                 case "get_ntc_values_cmd":
                 {
+                    cmd = eBFcmds.get_ntc_values_cmd;
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_ntc_values_cmd, seq, dat, dat_size);
                     toRecvCount = 11;
@@ -262,6 +279,7 @@ namespace bfsrv_test
                 }
                 case "set_dsp_tone_touch_ceff_cmd":
                 {
+                    cmd = eBFcmds.set_dsp_tone_touch_ceff_cmd;
                     byte[] dat = new byte[9];
                     dat_size = 9;
                     double gx = (double)Convert.ToDouble(args[2]);

@@ -410,18 +410,18 @@ namespace bfsrv_test
             }
             Console.WriteLine("");
             //0x55, 0xaa, 0x0, 0x1, 0x5, 0x1, 0x0, 0x2, 0x1, 0x1, 0x52, 0x2e
-            toRecv[0] = 0x55;
-            toRecv[1] = 0xAA;
-            toRecv[2] = 0x00;
-            toRecv[3] = 0x01;
-            toRecv[4] = 0x05;
-            toRecv[5] = 0x01;
-            toRecv[6] = 0x00;
-            toRecv[7] = 0x02;
-            toRecv[8] = 0x01;
-            toRecv[9] = 0x01;
-            toRecv[10] = 0x52;
-            toRecv[11] = 0x2E;
+            //toRecv[0] = 0x55;
+            //toRecv[1] = 0xAA;
+            //toRecv[2] = 0x00;
+            //toRecv[3] = 0x01;
+            //toRecv[4] = 0x05;
+            //toRecv[5] = 0x01;
+            //toRecv[6] = 0x00;
+            //toRecv[7] = 0x02;
+            //toRecv[8] = 0x01;
+            //toRecv[9] = 0x01;
+            //toRecv[10] = 0x52;
+            //toRecv[11] = 0x2E;
 
             Console.Write("Received: ");
 

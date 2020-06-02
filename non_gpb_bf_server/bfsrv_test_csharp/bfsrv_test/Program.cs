@@ -35,8 +35,8 @@ namespace bfsrv_test
 
         static byte[] toSend = new byte[100];
         static byte[] toRecv = new byte[100];
-        static int toSendCount = 0;
-        static int toRecvCount = 0;
+        static byte toSendCount = 0;
+        static byte toRecvCount = 0;
         static byte seq = 0;
         static eBFcmds cmd;
 
@@ -104,6 +104,33 @@ namespace bfsrv_test
 
 
         }
+        //0x55, 0xaa, 0x0, 0x10, 0x4, 0x41, 0x3b, 0x29, 0x2a, 0xa4, 0xf3
+        static bool checkHeader(byte bytes_read)
+        {
+            ushort crc16 = ComputeChecksum(toRecv, bytes_read - 2);
+            byte c1 = toRecv[bytes_read - 1];
+            byte c2 = toRecv[bytes_read - 2];
+            ushort rec_crc16 = (ushort)(((ushort)(c1 << 8)) | c2); 
+            if (rec_crc16 != crc16)
+            {
+                Console.WriteLine("CRC16 - Error!");
+                return false;
+            }
+            if ((toRecv[0] != 0x55) ||
+                    (toRecv[1] != 0xAA))
+            {
+                Console.WriteLine("Incorrect message sign - Error!");
+                return false;
+            }
+            if (toRecv[2] != seq)
+            {
+                Console.WriteLine("Incorrect message seq - Error!");
+                return false;
+            }
+            return true;
+        }
+
+
         //args[0] - com port name  for example "COM4"
         static void Main(string[] args)
         {
@@ -120,7 +147,6 @@ namespace bfsrv_test
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.ver_info_cmd, seq, dat, dat_size);
                     toRecvCount = 12;
-                    seq++;
                     break;
                 }
                 case "get_power_cmd":
@@ -129,7 +155,6 @@ namespace bfsrv_test
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_power_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
-                    seq++;
                     break;
                 }
                 case "set_power_cmd":
@@ -140,7 +165,6 @@ namespace bfsrv_test
                     dat[0] = (byte)Convert.ToByte(args[2], 16);
                     createHeader((byte)eBFcmds.set_power_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
-                    seq++;
                     break;
                 }
                 case "get_volume_cmd":
@@ -149,7 +173,6 @@ namespace bfsrv_test
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_volume_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
-                    seq++;
                     break;
                 }
                 case "set_volume_nofade_cmd":
@@ -160,7 +183,6 @@ namespace bfsrv_test
                     dat[0] = (byte)Convert.ToByte(args[2], 16);
                     createHeader((byte)eBFcmds.set_volume_nofade_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
-                    seq++;
                     break;
                 }
                 case "set_volume_fade_cmd":
@@ -174,7 +196,6 @@ namespace bfsrv_test
                     dat[2] = (byte)(duration >> 8);
                     createHeader((byte)eBFcmds.set_volume_fade_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
-                    seq++;
                     break;
                 }
                 case "get_mute_cmd":
@@ -183,7 +204,6 @@ namespace bfsrv_test
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_mute_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
-                    seq++;
                     break;
                 }
                 case "set_mute_cmd":
@@ -194,7 +214,6 @@ namespace bfsrv_test
                     dat[0] = (byte)Convert.ToByte(args[2], 16);
                     createHeader((byte)eBFcmds.set_mute_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
-                    seq++;
                     break;
                 }
                 case "get_audio_mode_cmd":
@@ -203,7 +222,6 @@ namespace bfsrv_test
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_audio_mode_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
-                    seq++;
                     break;
                 }
                 case "set_audio_mode_cmd":
@@ -214,7 +232,6 @@ namespace bfsrv_test
                     dat[0] = (byte)Convert.ToByte(args[2], 16);
                     createHeader((byte)eBFcmds.set_audio_mode_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
-                    seq++;
                     break;
                 }
                 case "get_audio_source_cmd":
@@ -223,7 +240,6 @@ namespace bfsrv_test
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_audio_source_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
-                    seq++;
                     break;
                 }
                 case "set_audio_source_cmd":
@@ -234,7 +250,6 @@ namespace bfsrv_test
                     dat[0] = (byte)Convert.ToByte(args[2], 16);
                     createHeader((byte)eBFcmds.set_audio_source_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
-                    seq++;
                     break;
                 }
                 case "get_dsp_parameters_cmd":
@@ -243,7 +258,6 @@ namespace bfsrv_test
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_dsp_parameters_cmd, seq, dat, dat_size);
                     toRecvCount = 10;
-                    seq++;
                     break;
                 }
                 case "set_dsp_parameters_cmd":
@@ -256,7 +270,6 @@ namespace bfsrv_test
                     dat[2] = (byte)Convert.ToByte(args[4], 16);
                     createHeader((byte)eBFcmds.set_dsp_parameters_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
-                    seq++;
                     break;
                 }
                 case "get_audio_signal_level_cmd":
@@ -265,7 +278,6 @@ namespace bfsrv_test
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_audio_signal_level_cmd, seq, dat, dat_size);
                     toRecvCount = 11;
-                    seq++;
                     break;
                 } 
                 case "get_ntc_values_cmd":
@@ -274,7 +286,6 @@ namespace bfsrv_test
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_ntc_values_cmd, seq, dat, dat_size);
                     toRecvCount = 11;
-                    seq++;
                     break;
                 }
                 case "set_dsp_tone_touch_ceff_cmd":
@@ -358,7 +369,6 @@ namespace bfsrv_test
                     dat[8] = (byte)(gz_frac >> 8);
                     createHeader((byte)eBFcmds.set_dsp_tone_touch_ceff_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
-                    seq++;
                     break;
                 }
 
@@ -370,7 +380,7 @@ namespace bfsrv_test
                         break;
                 }
             }
-            toSendCount = dat_size + 7;
+            toSendCount = (byte)(dat_size + 7);
 
             //          serialPort.Write(toSend,0, toSendCount);
             DateTime start = DateTime.Now;
@@ -386,7 +396,7 @@ namespace bfsrv_test
 
             if (serialPort.BytesToRead < toRecvCount)
             {
-                Console.Write("Could not receive response in timeout. Exit");
+                Console.WriteLine("Could not receive response in timeout. Exit");
                 return;
             }
             serialPort.Read(toRecv,0, toRecvCount);
@@ -399,6 +409,19 @@ namespace bfsrv_test
                 Console.Write("0x{0} ", toSend[ii].ToString("X2"));
             }
             Console.WriteLine("");
+            //0x55, 0xaa, 0x0, 0x1, 0x5, 0x1, 0x0, 0x2, 0x1, 0x1, 0x52, 0x2e
+            toRecv[0] = 0x55;
+            toRecv[1] = 0xAA;
+            toRecv[2] = 0x00;
+            toRecv[3] = 0x01;
+            toRecv[4] = 0x05;
+            toRecv[5] = 0x01;
+            toRecv[6] = 0x00;
+            toRecv[7] = 0x02;
+            toRecv[8] = 0x01;
+            toRecv[9] = 0x01;
+            toRecv[10] = 0x52;
+            toRecv[11] = 0x2E;
 
             Console.Write("Received: ");
 
@@ -411,7 +434,41 @@ namespace bfsrv_test
             {
                 case eBFcmds.ver_info_cmd:
                     {
-
+                        if (checkHeader(toRecvCount))
+                        {
+                            if (toRecv[3] != (byte)eBFcmds.ver_info_cmd)
+                            {
+                                Console.WriteLine("Incorrect message command - Error!");
+                                return;
+                            }
+                            Console.WriteLine("Message OK: sw ver: {0}.{1}.{2}.{3}; hw ver:{4};", toRecv[5], toRecv[6], toRecv[7], toRecv[8], toRecv[9]);
+                        }
+                        break;
+                    }
+                case eBFcmds.get_power_cmd:
+                    {
+                        if (checkHeader(toRecvCount))
+                        {
+                            if (toRecv[3] != (byte)eBFcmds.get_power_cmd)
+                            {
+                                Console.WriteLine("Incorrect message command - Error!");
+                                return;
+                            }
+                            Console.WriteLine("Message OK: Power mode: {0};", toRecv[5]);
+                        }
+                        break;
+                    }
+                case eBFcmds.set_power_cmd:
+                    {
+                        if (checkHeader(toRecvCount))
+                        {
+                            if (toRecv[3] != (byte)eBFcmds.set_power_cmd)
+                            {
+                                Console.WriteLine("Incorrect message command - Error!");
+                                return;
+                            }
+                            Console.WriteLine("Message OK: Return status: {0};", toRecv[5]);
+                        }
                         break;
                     }
                 default:
@@ -419,6 +476,7 @@ namespace bfsrv_test
                     break;
 
             }
+            seq++;
         }
     }
 }

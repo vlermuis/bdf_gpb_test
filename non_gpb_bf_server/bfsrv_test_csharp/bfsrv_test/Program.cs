@@ -471,6 +471,213 @@ namespace bfsrv_test
                         }
                         break;
                     }
+                case eBFcmds.get_volume_cmd:
+                    {
+                        if (checkHeader(toRecvCount))
+                        {
+                            if (toRecv[3] != (byte)eBFcmds.get_volume_cmd)
+                            {
+                                Console.WriteLine("Incorrect message command - Error!");
+                                return;
+                            }
+                            Console.WriteLine("Message OK: Volume: {0};", toRecv[5]);
+                        }
+                        break;
+                    }
+                case eBFcmds.set_volume_nofade_cmd:
+                    {
+                        if (checkHeader(toRecvCount))
+                        {
+                            if (toRecv[3] != (byte)eBFcmds.set_volume_nofade_cmd)
+                            {
+                                Console.WriteLine("Incorrect message command - Error!");
+                                return;
+                            }
+                            Console.WriteLine("Message OK: Return status: {0};", toRecv[5]);
+                        }
+                        break;
+                    }
+                case eBFcmds.set_volume_fade_cmd:
+                    {
+                        if (checkHeader(toRecvCount))
+                        {
+                            if (toRecv[3] != (byte)eBFcmds.set_volume_fade_cmd)
+                            {
+                                Console.WriteLine("Incorrect message command - Error!");
+                                return;
+                            }
+                            Console.WriteLine("Message OK: Return status: {0};", toRecv[5]);
+                        }
+                        break;
+                    }
+                case eBFcmds.get_mute_cmd:
+                    {
+                        if (checkHeader(toRecvCount))
+                        {
+                            if (toRecv[3] != (byte)eBFcmds.get_mute_cmd)
+                            {
+                                Console.WriteLine("Incorrect message command - Error!");
+                                return;
+                            }
+                            Console.WriteLine("Message OK: Mute: {0};", toRecv[5]);
+                        }
+                        break;
+                    }
+                case eBFcmds.set_mute_cmd:
+                    {
+                        if (checkHeader(toRecvCount))
+                        {
+                            if (toRecv[3] != (byte)eBFcmds.set_mute_cmd)
+                            {
+                                Console.WriteLine("Incorrect message command - Error!");
+                                return;
+                            }
+                            Console.WriteLine("Message OK: Return status: {0};", toRecv[5]);
+                        }
+                        break;
+                    }
+                case eBFcmds.get_audio_mode_cmd:
+                    {
+                        if (checkHeader(toRecvCount))
+                        {
+                            if (toRecv[3] != (byte)eBFcmds.get_audio_mode_cmd)
+                            {
+                                Console.WriteLine("Incorrect message command - Error!");
+                                return;
+                            }
+                            if (toRecv[5] == 1)
+                            {
+                                Console.WriteLine("Message OK: Audio mode: entertainment;");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Message OK: Audio mode: massage;");
+                            }
+                        }
+                        break;
+                    }
+                case eBFcmds.set_audio_mode_cmd:
+                    {
+                        if (checkHeader(toRecvCount))
+                        {
+                            if (toRecv[3] != (byte)eBFcmds.set_audio_mode_cmd)
+                            {
+                                Console.WriteLine("Incorrect message command - Error!");
+                                return;
+                            }
+                            Console.WriteLine("Message OK: Return status: {0};", toRecv[5]);
+                        }
+                        break;
+                    }
+                case eBFcmds.get_audio_source_cmd:
+                    {
+                        if (checkHeader(toRecvCount))
+                        {
+                            if (toRecv[3] != (byte)eBFcmds.get_audio_source_cmd)
+                            {
+                                Console.WriteLine("Incorrect message command - Error!");
+                                return;
+                            }
+                            //Console.WriteLine("Message OK: Mute: {0};", toRecv[5]);
+                            switch(toRecv[5])
+                            {
+                                case 0:
+                                    Console.WriteLine("Message OK: Current audio source: wifi-bt");
+                                    break;
+                                case 1:
+                                    Console.WriteLine("Message OK: Current audio source: sd-card");
+                                    break;
+                                case 2:
+                                    Console.WriteLine("Message OK: Current audio source: spdif");
+                                    break;
+                                case 3:
+                                    Console.WriteLine("Message OK: Current audio source: aux");
+                                    break;
+                                default:
+                                    Console.WriteLine("Unknow audio source - error!");
+                                    break;
+                            }
+                        }
+                        break;
+                    }
+                case eBFcmds.set_audio_source_cmd:
+                    {
+                        if (checkHeader(toRecvCount))
+                        {
+                            if (toRecv[3] != (byte)eBFcmds.set_audio_source_cmd)
+                            {
+                                Console.WriteLine("Incorrect message command - Error!");
+                                return;
+                            }
+                            Console.WriteLine("Message OK: Return status: {0};", toRecv[5]);
+                        }
+                        break;
+                    }
+                case eBFcmds.get_dsp_parameters_cmd:
+                    {
+                        if (checkHeader(toRecvCount))
+                        {
+                            if (toRecv[3] != (byte)eBFcmds.get_dsp_parameters_cmd)
+                            {
+                                Console.WriteLine("Incorrect message command - Error!");
+                                return;
+                            }
+                            Console.WriteLine("Message OK: Loudness: {0}; Treble:{1}; Bass{2};", toRecv[5], toRecv[6], toRecv[7]);
+                        }
+                        break;
+                    }
+                case eBFcmds.set_dsp_parameters_cmd:
+                    {
+                        if (checkHeader(toRecvCount))
+                        {
+                            if (toRecv[3] != (byte)eBFcmds.set_dsp_parameters_cmd)
+                            {
+                                Console.WriteLine("Incorrect message command - Error!");
+                                return;
+                            }
+                            Console.WriteLine("Message OK: Return status: {0};", toRecv[5]);
+                        }
+                        break;
+                    }
+                case eBFcmds.get_audio_signal_level_cmd:
+                    {
+                        if (checkHeader(toRecvCount))
+                        {
+                            if (toRecv[3] != (byte)eBFcmds.get_audio_signal_level_cmd)
+                            {
+                                Console.WriteLine("Incorrect message command - Error!");
+                                return;
+                            }
+                            Console.WriteLine("Message OK: WifiBT:-{0}dB; SDcard:-{1}dB; SPDIF:-{2}dB; Aux:-{3}dB;", toRecv[5], toRecv[6], toRecv[7], toRecv[8]);
+                        }
+                        break;
+                    }
+                case eBFcmds.get_ntc_values_cmd:
+                    {
+                        if (checkHeader(toRecvCount))
+                        {
+                            if (toRecv[3] != (byte)eBFcmds.get_ntc_values_cmd)
+                            {
+                                Console.WriteLine("Incorrect message command - Error!");
+                                return;
+                            }
+                            Console.WriteLine("Message OK: Amp1:{0}C; Amp2:{1}C; WfLeft:{2}dB; WfRigth:{3}C;", toRecv[5], toRecv[6], toRecv[7], toRecv[8]);
+                        }
+                        break;
+                    }
+                case eBFcmds.set_dsp_tone_touch_ceff_cmd:
+                    {
+                        if (checkHeader(toRecvCount))
+                        {
+                            if (toRecv[3] != (byte)eBFcmds.set_dsp_tone_touch_ceff_cmd)
+                            {
+                                Console.WriteLine("Incorrect message command - Error!");
+                                return;
+                            }
+                            Console.WriteLine("Message OK: Return status: {0};", toRecv[5]);
+                        }
+                        break;
+                    }
                 default:
                     Console.WriteLine();
                     break;

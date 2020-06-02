@@ -118,6 +118,7 @@ namespace bfsrv_test
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.ver_info_cmd, seq, dat, dat_size);
                     toRecvCount = 12;
+                    seq++;
                     break;
                 }
                 case "get_power_cmd":
@@ -125,6 +126,7 @@ namespace bfsrv_test
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_power_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
+                    seq++;
                     break;
                 }
                 case "set_power_cmd":
@@ -134,6 +136,7 @@ namespace bfsrv_test
                     dat[0] = (byte)Convert.ToByte(args[2], 16);
                     createHeader((byte)eBFcmds.set_power_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
+                    seq++;
                     break;
                 }
                 case "get_volume_cmd":
@@ -141,6 +144,7 @@ namespace bfsrv_test
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_volume_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
+                    seq++;
                     break;
                 }
                 case "set_volume_nofade_cmd":
@@ -150,6 +154,7 @@ namespace bfsrv_test
                     dat[0] = (byte)Convert.ToByte(args[2], 16);
                     createHeader((byte)eBFcmds.set_volume_nofade_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
+                    seq++;
                     break;
                 }
                 case "set_volume_fade_cmd":
@@ -162,6 +167,7 @@ namespace bfsrv_test
                     dat[2] = (byte)(duration >> 8);
                     createHeader((byte)eBFcmds.set_volume_fade_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
+                    seq++;
                     break;
                 }
                 case "get_mute_cmd":
@@ -169,6 +175,7 @@ namespace bfsrv_test
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_mute_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
+                    seq++;
                     break;
                 }
                 case "set_mute_cmd":
@@ -178,6 +185,7 @@ namespace bfsrv_test
                     dat[0] = (byte)Convert.ToByte(args[2], 16);
                     createHeader((byte)eBFcmds.set_mute_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
+                    seq++;
                     break;
                 }
                 case "get_audio_mode_cmd":
@@ -185,6 +193,7 @@ namespace bfsrv_test
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_audio_mode_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
+                    seq++;
                     break;
                 }
                 case "set_audio_mode_cmd":
@@ -194,6 +203,7 @@ namespace bfsrv_test
                     dat[0] = (byte)Convert.ToByte(args[2], 16);
                     createHeader((byte)eBFcmds.set_audio_mode_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
+                    seq++;
                     break;
                 }
                 case "get_audio_source_cmd":
@@ -201,6 +211,7 @@ namespace bfsrv_test
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_audio_source_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
+                    seq++;
                     break;
                 }
                 case "set_audio_source_cmd":
@@ -210,6 +221,7 @@ namespace bfsrv_test
                     dat[0] = (byte)Convert.ToByte(args[2], 16);
                     createHeader((byte)eBFcmds.set_audio_source_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
+                    seq++;
                     break;
                 }
                 case "get_dsp_parameters_cmd":
@@ -217,6 +229,7 @@ namespace bfsrv_test
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_dsp_parameters_cmd, seq, dat, dat_size);
                     toRecvCount = 10;
+                    seq++;
                     break;
                 }
                 case "set_dsp_parameters_cmd":
@@ -228,6 +241,7 @@ namespace bfsrv_test
                     dat[2] = (byte)Convert.ToByte(args[4], 16);
                     createHeader((byte)eBFcmds.set_dsp_parameters_cmd, seq, dat, dat_size);
                     toRecvCount = 8;
+                    seq++;
                     break;
                 }
                 case "get_audio_signal_level_cmd":
@@ -235,19 +249,106 @@ namespace bfsrv_test
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_audio_signal_level_cmd, seq, dat, dat_size);
                     toRecvCount = 11;
+                    seq++;
                     break;
-                }
+                } 
                 case "get_ntc_values_cmd":
                 {
                     byte[] dat = new byte[1];
                     createHeader((byte)eBFcmds.get_ntc_values_cmd, seq, dat, dat_size);
                     toRecvCount = 11;
+                    seq++;
+                    break;
+                }
+                case "set_dsp_tone_touch_ceff_cmd":
+                {
+                    byte[] dat = new byte[9];
+                    dat_size = 9;
+                    double gx = (double)Convert.ToDouble(args[2]);
+                    double gy = (double)Convert.ToDouble(args[3]);
+                    double gz = (double)Convert.ToDouble(args[4]);
+                    string str_gx_frac;
+                    string str_gx_int;
+                    bool gx_sign = false;
+                    if (gx < 0)
+                    {
+                        str_gx_frac = args[2].Substring(3);
+                        str_gx_int = args[2].Substring(1, 1);
+                        gx_sign = true;
+                    }
+                    else
+                    {
+                        str_gx_frac = args[2].Substring(2);
+                        str_gx_int = args[2].Substring(0, 1);
+                    }
+                    UInt16 gx_frac = (UInt16)Convert.ToUInt16(str_gx_frac);
+                    byte gx_int = (byte)Convert.ToByte(str_gx_int);
+                    dat[0] = gx_int;
+                    if (gx_sign)
+                    {
+                        dat[0] = (byte)(dat[0] | 0x80);
+                    }
+                    dat[1] = (byte)(gx_frac & 0xFF);
+                    dat[2] = (byte)(gx_frac >> 8);
+
+                    string str_gy_frac;
+                    string str_gy_int;
+                    bool gy_sign = false;
+                    if (gy < 0)
+                    {
+                        str_gy_frac = args[3].Substring(3);
+                        str_gy_int = args[3].Substring(1, 1);
+                        gy_sign = true;
+                    }
+                    else
+                    {
+                        str_gy_frac = args[3].Substring(2);
+                        str_gy_int = args[3].Substring(0, 1);
+                    }
+                    UInt16 gy_frac = (UInt16)Convert.ToUInt16(str_gy_frac);
+                    byte gy_int = (byte)Convert.ToByte(str_gy_int);
+                    dat[3] = gy_int;
+                    if (gy_sign)
+                    {
+                        dat[3] = (byte)(dat[3] | 0x80);
+                    }
+                    dat[4] = (byte)(gx_frac & 0xFF);
+                    dat[5] = (byte)(gx_frac >> 8);
+
+                    string str_gz_frac;
+                    string str_gz_int;
+                    bool gz_sign = false;
+                    if (gz < 0)
+                    {
+                        str_gz_frac = args[4].Substring(3);
+                        str_gz_int = args[4].Substring(1, 1);
+                        gz_sign = true;
+                    }
+                    else
+                    {
+                        str_gz_frac = args[4].Substring(2);
+                        str_gz_int = args[4].Substring(0, 1);
+                    }
+                    UInt16 gz_frac = (UInt16)Convert.ToUInt16(str_gz_frac);
+                    byte gz_int = (byte)Convert.ToByte(str_gz_int);
+                    dat[6] = gz_int;
+                    if (gz_sign)
+                    {
+                        dat[6] = (byte)(dat[6] | 0x80);
+                    }
+                    dat[7] = (byte)(gz_frac & 0xFF);
+                    dat[8] = (byte)(gz_frac >> 8);
+                    createHeader((byte)eBFcmds.set_dsp_tone_touch_ceff_cmd, seq, dat, dat_size);
+                    toRecvCount = 8;
+                    seq++;
                     break;
                 }
 
 
                 defaut:
                 {
+                        Console.Write("Unknown command!");
+                        return;
                         break;
                 }
             }

@@ -330,8 +330,8 @@ namespace bfsrv_test
                     {
                         dat[3] = (byte)(dat[3] | 0x80);
                     }
-                    dat[4] = (byte)(gx_frac & 0xFF);
-                    dat[5] = (byte)(gx_frac >> 8);
+                    dat[4] = (byte)(gy_frac & 0xFF);
+                    dat[5] = (byte)(gy_frac >> 8);
 
                     string str_gz_frac;
                     string str_gz_int;
@@ -365,7 +365,7 @@ namespace bfsrv_test
 
                 defaut:
                 {
-                        Console.Write("Unknown command!");
+                        Console.WriteLine("Unknown command- Error!");
                         return;
                         break;
                 }
@@ -407,6 +407,18 @@ namespace bfsrv_test
                 Console.Write("0x{0} ", toRecv[ii].ToString("X2"));
             }
             Console.WriteLine("");
+            switch(cmd)
+            {
+                case eBFcmds.ver_info_cmd:
+                    {
+
+                        break;
+                    }
+                default:
+                    Console.WriteLine();
+                    break;
+
+            }
         }
     }
 }

@@ -134,10 +134,14 @@ namespace bfsrv_test
         //args[0] - com port name  for example "COM4"
         static void Main(string[] args)
         {
-
-            //            SerialPort serialPort = new SerialPort("COM4", 57600, Parity.Even, 8, StopBits.One);
-            //            serialPort.Handshake = Handshake.None;
-            //            serialPort.Open();
+            if (args.Length < 2)
+            {
+                Console.WriteLine("COM<number> <command> [parameters]");
+                return;
+            }
+            SerialPort serialPort = new SerialPort(args[0], 57600, Parity.Even, 8, StopBits.One);
+            serialPort.Handshake = Handshake.None;
+            serialPort.Open();
             byte dat_size = 0;
             switch (args[1])
             {
@@ -382,11 +386,11 @@ namespace bfsrv_test
             }
             toSendCount = (byte)(dat_size + 7);
 
-            //          serialPort.Write(toSend,0, toSendCount);
+            serialPort.Write(toSend,0, toSendCount);
             DateTime start = DateTime.Now;
             DateTime now;// = DateTime.Now;
             int timeout = 0;
-/*
+
             while ((serialPort.BytesToRead < toRecvCount) && (timeout < 100))
             {
                 now = DateTime.Now;
@@ -401,7 +405,6 @@ namespace bfsrv_test
             }
             serialPort.Read(toRecv,0, toRecvCount);
             serialPort.Close();
-*/
             Console.Write("Sent:     ");
 
             for (int ii = 0; ii < toSendCount; ii++)
